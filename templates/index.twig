@@ -1,0 +1,22 @@
+{% extends "base.twig" %}
+
+                {% block content %}
+                <div class="entry-list">
+                 
+                {% for entry in post %}
+                <article>
+                    <h2><a href="detail">{{ entry.title }}</a></h2>
+                    <time datetime="{{ entry.date }}">{{ entry.date }}</time>
+                    <p>
+                       
+                    
+                        {% for tags in entry.tags %}
+                            {{ tags.tags }} 
+                            {% endfor %}
+                  
+                    </p>
+                </article>
+                {% endfor %}
+                </div>
+                {% endblock %}
+           
