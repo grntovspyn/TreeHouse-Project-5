@@ -5,7 +5,7 @@
                  
                 {% for entry in post %}
                 <article>
-                    <h2><a href="detail">{{ entry.title }}</a></h2>
+                    <h2><a href="detail/{{ entry.id }}">{{ entry.title }}</a></h2>
                     <time datetime="{{ entry.date }}">{{ entry.date }}</time>
                     <p>
                        
