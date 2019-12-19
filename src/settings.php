@@ -19,6 +19,7 @@ return [
             'template_path' => __DIR__ . '/../templates/',
             'cache' => false,
             'auto_reload' => true,
+            'debug' => true,
           ],
 
        

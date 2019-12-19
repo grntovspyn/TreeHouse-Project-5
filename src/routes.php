@@ -10,24 +10,12 @@ use Psr\Log\LoggerInterface;
 use Illuminate\Database\Query\Builder;
 use App\WidgetController;
 
+/******** INDEX PAGE ROUTES **************/
+
 $app->get('/', function ($request, $response, $args){
 
 
-  
-
-   //$create = BlogPost\Post::create(['title' => 'Test Entry','date' => '2010-01-03', 'body' => 'Something to test out the new eloquent orm']);
-
-
-  // $all = BlogPost\Post::has('tags')->get();
-
-   //$single =  $all->tags()->where('id',32)->get();
-
-
-    $post = BlogPost\Post::with('tags')->get();
-
-
-
-
+    $post = BlogPost\Post::with('tags')->orderBy('date', 'desc')->get();
 
      // CSRF token name and value
  $csrf = $this->get('csrf');
@@ -38,6 +26,7 @@ $app->get('/', function ($request, $response, $args){
      $valueKey => $request->getAttribute($valueKey)
    ];
 
+
  return $this->view->render($response, "index.twig", [
      'csrf' => $csrf,
      'args' => $args,
@@ -46,11 +35,11 @@ $app->get('/', function ($request, $response, $args){
  ]);
 
 
-});
+})->setName('blogPost');
 
+/************** DETAIL PAGE ROUTES ****************/
 
-
-$app->get('/detail/{id}', function ($request, $response, $args) {
+$app->get('/detail/[{id}]', function ($request, $response, $args) {
     // CSRF token name and value
     $csrf = $this->get('csrf');
     $nameKey = $csrf->getTokenNameKey();
@@ -60,11 +49,18 @@ $app->get('/detail/{id}', function ($request, $response, $args) {
         $valueKey => $request->getAttribute($valueKey)
       ];
 
-  
+      $post = BlogPost\Post::find($args['id']);
+      //$tags = BlogPost\Post::with('tags')->has('tags')->where('id', $args['id'])->get();
+    //   $tags = BlogPost\Post::where('id', $args['id'])->with('tags')->get();
+
+      $specTags = $post->tags;
     return $this->view->render($response, "detail.twig", [
         'csrf' => $csrf,
-        'args' => $args
+        'args' => $args,
+        'post' => $post,
+        'tags' => $specTags
     ]);
+
     /*
        Render HTML form which POSTs to /bar with two hidden input fields for the
        name and value:
@@ -72,6 +68,39 @@ $app->get('/detail/{id}', function ($request, $response, $args) {
        <input type="hidden" name="<?= $valueKey ?>" value="<?= $value ?>">
      */
 });
+
+
+$app->map(['GET', 'POST'],'/edit/[{id}]', function ($request, $response, $args) {
+  // CSRF token name and value
+  $csrf = $this->get('csrf');
+  $nameKey = $csrf->getTokenNameKey();
+  $valueKey = $csrf->getTokenValueKey();
+  $csrf = [
+      $nameKey => $request->getAttribute($nameKey),
+      $valueKey => $request->getAttribute($valueKey),
+  ];
+
+  $post = BlogPost\Post::find($args['id']);
+  //$tags = BlogPost\Post::with('tags')->has('tags')->where('id', $args['id'])->get();
+  //   $tags = BlogPost\Post::where('id', $args['id'])->with('tags')->get();
+
+  $specTags = $post->tags;
+  var_dump($csrf);
+  return $this->view->render($response, 'edit.twig', [
+      'csrf' => $csrf,
+      'args' => $args,
+      'post' => $post,
+      'tags' => $specTags,
+  ]);
+})->setName('edit');
+  /*
+     Render HTML form which POSTs to /bar with two hidden input fields for the
+     name and value:
+     <input type="hidden" name="<?= $nameKey ?>" value="<?= $name ?>">
+     <input type="hidden" name="<?= $valueKey ?>" value="<?= $value ?>">
+   */
+
+
 
 $app->post('/bar', function ($request, $response, $args) {
     // CSRF protection successful if you reached

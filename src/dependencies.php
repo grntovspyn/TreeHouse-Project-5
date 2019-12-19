@@ -32,13 +32,16 @@ $container['view'] = function ($c) {
     $view = new \Slim\Views\Twig($settings['template_path'], [
         'cache' => $settings['cache'],
         'auto_reload' => $settings['auto_reload'],
+        'debug' => true,
     ]);
     // Instantiate and add Slim specific extension
     $router = $c->get('router');
     $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
     $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+    
     return $view;
 };
+
 
 // Service factory for the ORM
 $capsule = new \Illuminate\Database\Capsule\Manager;
