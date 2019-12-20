@@ -23,7 +23,9 @@ $container['logger'] = function ($c) {
 
 //csrf
 $container['csrf'] = function ($c) {
-    return new \Slim\Csrf\Guard;
+    $guard = new \Slim\Csrf\Guard();
+    $guard->setPersistentTokenMode(true);
+    return $guard;
 };
 
 // Twig

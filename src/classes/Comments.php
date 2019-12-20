@@ -10,7 +10,7 @@ class Comment extends Model {
     public $timestamps = false;
 
 
-    protected $fillable = ['post_id','name','body'];
+    protected $fillable = ['post_id', 'date', 'name', 'body'];
    
 
 
