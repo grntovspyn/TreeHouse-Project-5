@@ -5,13 +5,13 @@
                  
                 {% for entry in post %}
                 <article>
-                    <h2><a href="detail/{{ entry.id }}">{{ entry.title|raw }}</a></h2>
+                    <h2><a href="detail/{{entry.slug|raw}}">{{ entry.title|raw }}</a></h2>
                     <time datetime="{{ entry.date }}">{{ entry.date }}</time>
                     <p>
                        
                         
                         {% for tags in entry.tags %}
-                            {{'#' ~ tags.tags }} 
+                            #{{tags.tags | raw}} 
                             {% endfor %}
                   
                     </p>

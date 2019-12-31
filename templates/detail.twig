@@ -17,9 +17,9 @@
                             {% endif %} 
                           
                             {% for tag in tags %}
-                        <span>{{ tag.tags }} </span>
+                        <span>#{{ tag.tags | raw}} </span>
                         {% endfor %}
-                            <p><a class="link" href="{{ path_for('edit') }}{{ args.id }}">Edit Entry</a></p>
+                            <p><a class="link" href="{{ path_for('edit') }}{{ post.slug }}">Edit Entry</a></p>
                         </div>
                         
                         
@@ -49,9 +49,9 @@
                             <input type="hidden" name="csrf_value" value="{{ csrf.csrf_value }}">
                             <input type="hidden" name="date" value="{{ 'now' | date()}}">
                               <label for="name"> Name</label>
-                              <input type="text" name="name"><br>
+                              <input type="text" name="name" required><br>
                               <label for="comment">Comment</label>
-                              <textarea rows="5" name="comment"></textarea>
+                              <textarea rows="5" name="comment" required></textarea>
                               <input type="submit" value="Post Comment" class="button">
                         </form>
                     </div>

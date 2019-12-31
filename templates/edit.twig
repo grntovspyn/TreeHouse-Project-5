@@ -21,7 +21,7 @@
                         <textarea rows="5" name="body" required>{{ post.body | raw }}</textarea>
                         <label for="tags">Tags</label>
                      
-                        <input type="text" name="tags" value="{{ tagString |trim(', ','right')}}">
+                        <input type="text" name="tags" value="{{ tagString |trim(', ','right')| raw}}">
                         <input type="submit" name="update" value="Save Entry" class="button">
                         <input type="submit" name="delete" value="Delete Entry" class="button2">
                         <a href="{{ base_url() }}" class="button button-secondary">Cancel</a>
