@@ -2,28 +2,21 @@
 
 {% block content %}
 
-<!-- How to concat strings in a variable https://stackoverflow.com/questions/10470328/how-to-combine-two-string-in-twig -->
-{% set tagString = "" %}
-    {% for tag in tags %}
-    {% set tagString = tagString ~ tag.tags ~ ", " %}
-{% endfor %}
-
             <div class="container">
-                <div class="edit-entry">
-                    <h2>Edit Entry</h2>
+                <div class="new-entry">
+                    <h2>New Entry</h2>
                     <form method='post'>
                         <input type="hidden" name="csrf_name" value="{{ csrf.csrf_name }}">
                         <input type="hidden" name="csrf_value" value="{{ csrf.csrf_value }}">
                         <input type="hidden" name="date" value="{{ 'now' | date()}}">
                         <label for="title"> Title</label>
-                        <input type="text" name="title" value="{{ post.title | raw }}" required><br>
+                        <input type="text" name="title" value="" required><br>
                         <label for="body">Entry</label>
-                        <textarea rows="5" name="body" required>{{ post.body | raw }}</textarea>
+                        <textarea rows="5" name="body" required></textarea>
                         <label for="tags">Tags</label>
                      
-                        <input type="text" name="tags" value="{{ tagString |trim(', ','right')}}">
+                        <input type="text" name="tags" value="">
                         <input type="submit" name="update" value="Save Entry" class="button">
-                        <input type="submit" name="delete" value="Delete Entry" class="button2">
                         <a href="{{ base_url() }}" class="button button-secondary">Cancel</a>
                     </form>
                 </div>

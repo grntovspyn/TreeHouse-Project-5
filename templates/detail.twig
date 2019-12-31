@@ -7,10 +7,10 @@
 
                 <div class="entry-list single">
                     <article>
-                        <h1>{{ post.title }}</h1>
-                        <time datetime="2016-01-31 1:00">{{ post[0].date}}</time>
+                        <h1>{{ post.title | raw }}</h1>
+                        <time datetime="{{ post.date}}">{{ post.date}}</time>
                         <div class="entry">
-                            <p>{{ post.body }} </p>
+                            <p>{{ post.body | raw }} </p>
 
                             {% if tags is not empty %}
                             <h4>Tags</h4>
@@ -19,7 +19,7 @@
                             {% for tag in tags %}
                         <span>{{ tag.tags }} </span>
                         {% endfor %}
-                            <p><a class="link" href="{{ path_for('edit') }}{{args.id }}">Edit Entry</a></p>
+                            <p><a class="link" href="{{ path_for('edit') }}{{ args.id }}">Edit Entry</a></p>
                         </div>
                         
                         
@@ -28,19 +28,26 @@
             </div>
         </section>
         <section class="entry-comments">
+            
             <div class="container">
+                {% if comments is not empty %}
                     <h2>Comments</h2>
-                    <div class="comment">
+                    
+                  
                         {% for comment in comments %}
+                        <div class="comment">
                         <strong>{{ comment.name }}</strong>
-                        <time datetime="2016-01-31 1:00">{{ comment.date }}</time>
+                        <time datetime="{{ comment.date }}">{{ comment.date }}</time>
                         <p>{{ comment.body }}</p>
-                        {% endfor %}
                     </div>
+                        {% endfor %}
+                  
+                    {% endif %}
                     <div class="new-comment">
                         <form method='post'>
                             <input type="hidden" name="csrf_name" value="{{ csrf.csrf_name }}">
                             <input type="hidden" name="csrf_value" value="{{ csrf.csrf_value }}">
+                            <input type="hidden" name="date" value="{{ 'now' | date()}}">
                               <label for="name"> Name</label>
                               <input type="text" name="name"><br>
                               <label for="comment">Comment</label>
