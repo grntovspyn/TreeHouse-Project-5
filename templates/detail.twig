@@ -19,7 +19,7 @@
                             {% for tag in tags %}
                         <span>#{{ tag.tags | raw}} </span>
                         {% endfor %}
-                            <p><a class="link" href="{{ path_for('edit') }}{{ post.slug }}">Edit Entry</a></p>
+                            <p><a class="link" href="{{ base_url()}}/edit/{{ post.slug }}">Edit Entry</a></p>
                         </div>
                         
                         

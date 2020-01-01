@@ -17,8 +17,12 @@ use App\WidgetController;
 $app->get('/', function ($request, $response, $args){
 
 //Pull all posts and tags and order by date
-$post = BlogPost\Post::with('tags')->orderBy('date', 'desc')->get();
 
+try {
+    $post = BlogPost\Post::with('tags')->orderBy('date', 'desc')->get();
+} catch(Exception $e){
+  echo "Unable to retrieve posts" . $e->getMessage();
+}
 
 // CSRF token name and value
 $csrf = $this->get('csrf');
@@ -43,12 +47,26 @@ return $this->view->render($response, "index.twig", [
 
 $app->map(['GET', 'POST'],'/detail/{slug}', function ($request, $response, $args) {
     $post = $specTags = $comments = "";
+    $basePath = $request->getUri()->getBasePath();
     $this->logger->addInfo("Detail Page");
       
 
     // Retrieve Post by Slug
-    $post = BlogPost\Post::where('slug', '=', $args['slug'])->first();
+
+    try {
+        $post = BlogPost\Post::where('slug', '=', $args['slug'])->first();
+    }catch(Exception $e){
+      echo "Unable to get post details" . $e->getMessage();
+    }
+    
+
+    // Stops user from putting in slugs that do not exist
+    if(!is_object($post)){
+      return $response->withStatus(302)->withHeader('Location', $basePath . '/');
+    }
+    
     // Retrieve Tags
+
     $specTags = $post->tags;
     $comments = $post->comments;
 
@@ -64,7 +82,7 @@ $app->map(['GET', 'POST'],'/detail/{slug}', function ($request, $response, $args
           die();
         }
 
-        $basePath = $request->getUri()->getBasePath();
+      
        return $response->withStatus(302)->withHeader('Location', $basePath . '/detail/' . $args['slug']);
       }
 
@@ -91,16 +109,27 @@ $app->map(['GET', 'POST'],'/detail/{slug}', function ($request, $response, $args
 });
 
 /****************** EDIT PAGE ROUTE **************************/
-$app->map(['GET', 'POST'],'/edit/[{slug}]', function ($request, $response, $args) {
+$app->map(['GET', 'POST'],'/edit/{slug}', function ($request, $response, $args) {
   $slug = "";
+  $basePath = $request->getUri()->getBasePath();
   $this->logger->addInfo("Edit Page");
   
   
+  try{
+    $post = BlogPost\Post::where('slug', $args['slug'])->first();
+  } catch(Exception $e) {
+    echo "Unable to retrieve post information" . $e->getMessage();
+    die();
+  }
   
-  $post = BlogPost\Post::where('slug', $args['slug'])->first();
+   // Stops user from putting in slugs that do not exist
+  if(!is_object($post)){
+    return $response->withStatus(302)->withHeader('Location', $basePath . '/');
+  }
+
   $specTags = $post->tags;
 
-  $basePath = $request->getUri()->getBasePath();
+  
 //Edit post
   if($request->getMethod() == "POST") {
 
@@ -124,6 +153,10 @@ $app->map(['GET', 'POST'],'/edit/[{slug}]', function ($request, $response, $args
     $args = $post->sanitize($args);
     $slug = $post->slugify($args['title']);
 
+    //Makes sure slug is unique before editing it
+    if($post->where('id', '!=', $postId )->where('slug', '=', $slug)->exists()){
+      $slug .= "-1";
+    }
 
     try {
         $post->where('id', $postId)->update(['title' => $args['title'], 'date' => $args['date'], 'body' => $args['body'], 'slug' => $slug]);
@@ -197,6 +230,11 @@ $post = new BlogPost\Post;
     $args = array_merge($args, $request->getParsedBody());
     $args = $post->sanitize($args);
     $slug = $post->slugify($args['title']);
+
+    //Makes sure slug is unique before creating it
+    if($post->where('slug', '=', $slug)->exists()){
+      $slug .= "-1";
+    }
 
     try {
         $postId = $post->create(['title' => $args['title'], 'date' => $args['date'], 'body' => $args['body'], 'slug' => $slug])->id;
