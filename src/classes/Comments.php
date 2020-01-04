@@ -11,7 +11,6 @@ class Comment extends Model {
 
 
     protected $fillable = ['post_id', 'date', 'name', 'body'];
-   
 
 
     public function posts() {

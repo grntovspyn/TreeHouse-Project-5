@@ -67,7 +67,6 @@ function slugify($text){
     return $text;
 }
 
-// $url = slugify('Hello world, this is the name of my article');
 
     
 
