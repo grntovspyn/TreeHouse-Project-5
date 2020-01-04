@@ -12,3 +12,5 @@ Be sure to run:
 
 This will ensure you have all required dependencies to ensure everything works correctly.
 
+-src
+--classes
