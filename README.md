@@ -14,7 +14,7 @@ This will ensure you have all required dependencies to ensure everything works c
 
 ### Extra Features ###
 
-*Comments associated with a post will be deleted along with the post.
-*When updating or changing tags, once a tag is no longer associated with any posts it will also get deleted.
-*Comments allow you to not put in anything in the name field and it will change the name to Anonymous.
+--Comments associated with a post will be deleted along with the post.
+--When updating or changing tags, once a tag is no longer associated with any posts it will also get deleted.
+--Comments allow you to not put in anything in the name field and it will change the name to Anonymous.
 
